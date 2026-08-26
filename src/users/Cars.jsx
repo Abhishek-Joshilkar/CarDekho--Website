@@ -9,7 +9,7 @@ function Cars() {
     try {
       const response = await axios.get("http://localhost:8080/cars");
       console.log(response.data);
-      setCars(response.data);
+      setCars(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching cars:", error);
     }
@@ -60,9 +60,10 @@ alert ("Car is added")
                 ₹{Number(car.price).toLocaleString("en-IN")}
               </h3>
 
-              <button>View Details</button>
-
-              <button onClick={()=>{addcart(car)}}>Add to cart </button>
+              <div className="car-actions">
+                <button type="button">View Details</button>
+                <button type="button" onClick={() => { addcart(car) }}>Add to cart</button>
+              </div>
 
             </div>
 

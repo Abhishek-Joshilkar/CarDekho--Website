@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import './auth.css';
+
 function Login() {
 
-  let { handleSubmit, register, reset } = useForm();
+  let { handleSubmit, register } = useForm();
 
   let nav = useNavigate()
 
@@ -40,23 +42,24 @@ function Login() {
 
 
   return (
-    <div className="add-car-container">
+    <div className="auth-shell">
+      <div className="auth-visual">
+        <span className="auth-kicker">Welcome back</span>
+        <h1>Find your next drive faster.</h1>
+        <p>Login to continue browsing saved cars, cart items, and fresh listings.</p>
+      </div>
 
-      <div className="add-car-card">
+      <div className="auth-card">
+        <div className="auth-card__header">
+          <h2>Login Account</h2>
+          <p>Enter your details to continue</p>
+        </div>
 
-        <h2>Login <span>Account</span></h2>
+        {msg && <p className="auth-error">Invalid email or password</p>}
 
-        <p className="form-subtitle">
-          Enter the details of your own
-        </p>
-
-        {msg && <p style={{color:"red"}}>Invlaid Email & Paasword</p>}
-
-        <Form onSubmit={handleSubmit(findUser)}>
-
-
-          <Form.Group className="mb-3">
-            <Form.Label>User Email</Form.Label>
+        <Form className="auth-form" onSubmit={handleSubmit(findUser)}>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -64,24 +67,27 @@ function Login() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>User Password</Form.Label>
+          <Form.Group>
+            <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter Password"
+              placeholder="Enter password"
               {...register("password")}
             />
           </Form.Group>
+
           <Button
-            className="submit-btn"
+            className="auth-submit"
             variant="danger"
             type="submit"
           >
             Login
           </Button>
-
-
         </Form>
+
+        <p className="auth-switch">
+          New to CarDekho? <Link to="/register">Create account</Link>
+        </p>
       </div>
     </div>
   )
