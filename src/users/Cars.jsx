@@ -19,6 +19,19 @@ function Cars() {
     fetchCars();
   }, []);
 
+  async function addcart(car){
+    let cart={
+      car,
+      quantity:1
+    }
+let res = await axios.post("http://localhost:8080/addcart",cart);
+console.log(res);
+
+alert ("Car is added")
+
+
+  }
+
   return (
     <div className="cars-page">
       <div className="cars-header">
@@ -48,6 +61,9 @@ function Cars() {
               </h3>
 
               <button>View Details</button>
+
+              <button onClick={()=>{addcart(car)}}>Add to cart </button>
+
             </div>
 
           </div>

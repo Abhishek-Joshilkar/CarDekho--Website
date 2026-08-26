@@ -11,6 +11,7 @@ import AdminHome from './admin/AdminHome.jsx'
 import AdminNav from './admin/AdminNav.jsx'
 import ViewCar from './admin/ViewCar.jsx'
 import EditCar from './admin/EditCar.jsx'
+import ViewCart from './users/ViewCart.jsx'
 
 let router = createBrowserRouter([
   {
@@ -26,16 +27,16 @@ let router = createBrowserRouter([
         element: <Cars />
       },
       {
-        path: 'addcar',
-        element: <AddCar />
-      },
-      {
         path: 'login',
         element: <Login />
       },
       {
         path: 'register',
         element: <Register />
+      },
+      {
+        path:"carts",
+        element:<ViewCart/>
       }
     ]
   },

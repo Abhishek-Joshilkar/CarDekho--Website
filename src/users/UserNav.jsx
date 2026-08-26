@@ -43,7 +43,7 @@ function UserNav() {
             </Link>
           </li>
           <li>
-            <Link to="/addcar">Add Car</Link>
+            <Link to="/carts">Cart</Link>
           </li>
           {/* <li>
             <Link to="/cars">Compare</Link>
