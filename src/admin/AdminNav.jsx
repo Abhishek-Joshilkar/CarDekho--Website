@@ -46,6 +46,14 @@ function AdminNav() {
             </Link>
           </li>
           <li>
+            <Link
+              to="/admin/orders"
+              className={location.pathname === '/admin/orders' ? 'active' : ''}
+            >
+              Orders
+            </Link>
+          </li>
+          <li>
             <Link to="/addcar">Add Car</Link>
           </li>
           

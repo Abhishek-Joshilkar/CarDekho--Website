@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import "./Cars.css";
+import { Link } from 'react-router-dom';
 
 function ViewCart() {
 
@@ -61,6 +62,7 @@ function ViewCart() {
                     )
                 })}
             </div>
+            <Link className="cd-btn-primary" to="/orders">View order details</Link>
         </div>
     )
 }
