@@ -12,6 +12,8 @@ import AdminNav from './admin/AdminNav.jsx'
 import ViewCar from './admin/ViewCar.jsx'
 import EditCar from './admin/EditCar.jsx'
 import ViewCart from './users/ViewCart.jsx'
+import Order from './users/Order.jsx'
+import AdminOrder from './admin/Order.jsx'
 
 let router = createBrowserRouter([
   {
@@ -37,6 +39,10 @@ let router = createBrowserRouter([
       {
         path:"carts",
         element:<ViewCart/>
+      },
+      {
+        path: "orders",
+        element: <Order />
       }
     ]
   },
@@ -55,6 +61,10 @@ element: <AdminHome />
       {
         path:"edit/:id",
         element:<EditCar/>
+      },
+      {
+        path: "orders",
+        element: <AdminOrder />
       }
     ]
   }

@@ -45,6 +45,14 @@ function UserNav() {
           <li>
             <Link to="/carts">Cart</Link>
           </li>
+          <li>
+            <Link
+              to="/orders"
+              className={location.pathname === '/orders' ? 'active' : ''}
+            >
+              Orders
+            </Link>
+          </li>
           {/* <li>
             <Link to="/cars">Compare</Link>
           </li> */}
