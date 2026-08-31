@@ -4,10 +4,11 @@ import "./Cars.css";
 
 function Cars() {
   const [cars, setCars] = useState([]);
+  let [url, seturl] = useState(["http://localhost:8080/cars"])
 
   const fetchCars = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/cars");
+      const response = await axios.get(url);
       console.log(response.data);
       setCars(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
@@ -17,26 +18,63 @@ function Cars() {
 
   useEffect(() => {
     fetchCars();
-  }, []);
+  }, [url]);
 
-  async function addcart(car){
-    let cart={
+  async function addcart(car) {
+    let cart = {
       car,
-      quantity:1
+      quantity: 1
     }
-let res = await axios.post("http://localhost:8080/addcart",cart);
-console.log(res);
+    let res = await axios.post("http://localhost:8080/addcart", cart);
+    console.log(res);
 
-alert ("Car is added")
-
-
+    alert("Car is added")
   }
 
   return (
+
     <div className="cars-page">
+
       <div className="cars-header">
+
+
         <h1>Explore Cars</h1>
         <p>Find the right car for your needs</p>
+      </div>
+
+      <div className="filter-section">
+        <label>
+          <input
+            type="radio"
+            name="price"
+            onChange={() =>
+              seturl("http://localhost:8080/car/asc")
+            }
+          />
+          Low To High
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="price"
+            onChange={() =>
+              seturl("http://localhost:8080/car/dsc")
+            }
+          />
+          High To Low
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="price"
+            onChange={() =>
+              seturl("http://localhost:8080/cars")
+            }
+          />
+          All Cars
+        </label>
       </div>
 
       <div className="cars-container">
