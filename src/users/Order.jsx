@@ -118,3 +118,12 @@ function Order({ admin = false }) {
 }
 
 export default Order
+import React from 'react'
+
+function Order() {
+  return (
+    <div></div>
+  )
+}
+
+export default Order
