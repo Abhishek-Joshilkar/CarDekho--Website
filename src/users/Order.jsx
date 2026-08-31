@@ -6,7 +6,7 @@ const formatCurrency = (value) =>
   `₹${Number(value || 0).toLocaleString('en-IN')}`
 
 const getItems = (order) => {
-  const items = order.items || order.cartItems || order.cart || []
+  const items = order.cart || []
   return Array.isArray(items) ? items : [items]
 }
 
@@ -63,7 +63,7 @@ function Order({ admin = false }) {
 
         {!loading && !error && orders.map((order, orderIndex) => {
           const items = getItems(order)
-          const paymentId = order.paymentId || order.payment_id || order.payment?.id
+          const paymentId = order.paymentid || order.payment_id || order.payment?.id
           const orderId = order.id || order.orderId || order._id || `order-${orderIndex}`
           const total = order.total ?? items.reduce((sum, item) => {
             const car = getCar(item)
@@ -114,15 +114,6 @@ function Order({ admin = false }) {
         })}
       </section>
     </main>
-  )
-}
-
-export default Order
-import React from 'react'
-
-function Order() {
-  return (
-    <div></div>
   )
 }
 

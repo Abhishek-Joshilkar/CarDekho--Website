@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import "./Cars.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ViewCart() {
 
     let [carts, setcart] = useState([]);
+    const navigate = useNavigate();
 
     async function fetchcarts() {
         try {
@@ -55,7 +56,7 @@ function ViewCart() {
 
         const options = {
             key: "rzp_test_TVC0b2EuUB9FlS", // Replace with your Razorpay Key ID
-            amount: 20000,
+            amount: totalAmount(),
             currency: "INR",
             name: "CarDekho",
             description: "Purchase Order",
@@ -65,7 +66,7 @@ function ViewCart() {
 
                 let order = {
                     cars: carts.map((cart) => cart.car),
-                    totalAmount: totalAmount(),
+                    totalamount: totalAmount(),
                     paymentid: response.razorpay_payment_id
                 };
                 let res = await axios.post("http://localhost:8080/order", order)
@@ -76,7 +77,7 @@ function ViewCart() {
                     let res = await axios.delete("http://localhost:8080/cart");
 
                     if (res.data == "cart is empty") {
-                        nav("/orders")
+                        navigate("/orders")
                     }
                 }
 
