@@ -53,10 +53,14 @@ function AdminNav() {
               Orders
             </Link>
           </li>
-          <li>
-            <Link to="/addcar">Add Car</Link>
-          </li>
-          
+           <li>
+            <Link
+              to="/admin/addcar"
+              className={location.pathname === '/admin/addcar' ? 'active' : ''}
+            >
+              Add Cars 
+            </Link>
+          </li>  
         </ul>
 
       </div>

@@ -65,6 +65,9 @@ element: <AdminHome />
       {
         path: "orders",
         element: <AdminOrder />
+      },{
+        path:"addcar",
+        element:<AddCar/>
       }
     ]
   }

@@ -1,120 +1,186 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import './Order.css'
 
-const formatCurrency = (value) =>
-  `₹${Number(value || 0).toLocaleString('en-IN')}`
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./Order.css";
 
-const getItems = (order) => {
-  const items = order.cart || []
-  return Array.isArray(items) ? items : [items]
-}
+const formatCurrency = (value) => {
+  return `₹${Number(value || 0).toLocaleString("en-IN")}`;
+};
 
-const getCar = (item) => item?.car || item
+function Orders() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-function Order({ admin = false }) {
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  async function fetchOrders() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await axios.get("http://localhost:8080/orders");
+
+      console.log("Orders:", res.data);
+
+      setOrders(Array.isArray(res.data) ? res.data : []);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      setError("Unable to load orders. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    let active = true
-
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/orders')
-        if (active) {
-          const payload = response.data
-          setOrders(Array.isArray(payload) ? payload : (Array.isArray(payload?.orders) ? payload.orders : []))
-          setError('')
-        }
-      } catch (requestError) {
-        console.error('Error fetching orders:', requestError)
-        if (active) {
-          setError('Unable to load orders. Please try again later.')
-        }
-      } finally {
-        if (active) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchOrders()
-    return () => {
-      active = false
-    }
-  }, [])
+    fetchOrders();
+  }, []);
 
   return (
     <main className="orders-page">
-      <header className="orders-header">
-        <p className="orders-kicker">{admin ? 'Admin dashboard' : 'Your purchases'}</p>
-        <h1>{admin ? 'All Orders' : 'My Orders'}</h1>
-        <p>{admin ? 'Review cart details and payment information for every order.' : 'Track your cars, cart items, and payment details in one place.'}</p>
-      </header>
 
-      <section className="orders-container" aria-live="polite">
-        {loading && <p className="orders-message">Loading orders...</p>}
-        {!loading && error && <p className="orders-message orders-message--error">{error}</p>}
-        {!loading && !error && orders.length === 0 && (
-          <p className="orders-message">No orders found.</p>
-        )}
+      {/* Page Heading */}
+      <div className="orders-heading">
+        <h1>My Orders</h1>
+        <p>All your purchased cars</p>
+      </div>
 
-        {!loading && !error && orders.map((order, orderIndex) => {
-          const items = getItems(order)
-          const paymentId = order.paymentid || order.payment_id || order.payment?.id
-          const orderId = order.id || order.orderId || order._id || `order-${orderIndex}`
-          const total = order.total ?? items.reduce((sum, item) => {
-            const car = getCar(item)
-            return sum + Number(car?.price || item?.price || 0) * Number(item?.quantity || 1)
-          }, 0)
+      {/* Loading */}
+      {loading && (
+        <div className="no-orders">
+          <h2>Loading Orders...</h2>
+          <p>Please wait while we fetch your orders.</p>
+        </div>
+      )}
 
-          return (
-            <article className="order-card" key={orderId}>
-              <div className="order-card__top">
-                <div>
-                  <p className="order-label">Order ID</p>
-                  <h2>{order.orderId || order.id || order._id || 'Order'}</h2>
+      {/* Error */}
+      {!loading && error && (
+        <div className="no-orders">
+          <h2>Something went wrong</h2>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* No Orders */}
+      {!loading && !error && orders.length === 0 && (
+        <div className="no-orders">
+          <h2>No Orders Found</h2>
+          <p>You have not placed any orders yet.</p>
+        </div>
+      )}
+
+      {/* Orders */}
+      {!loading && !error && orders.length > 0 && (
+        <div className="orders-container">
+
+          {orders.map((order) => {
+
+            const cars = Array.isArray(order.cars)
+              ? order.cars
+              : [];
+
+            const totalAmount =
+              order.totalamount ??
+              cars.reduce((total, car) => {
+                return total + Number(car.price || 0);
+              }, 0);
+
+            return (
+              <div
+                className="order-card"
+                key={order.id}
+              >
+
+                {/* Order Header */}
+                <div className="order-header">
+
+                  <div>
+                    <h2>
+                      Order #{order.id}
+                    </h2>
+
+                    <p>
+                      Payment ID:{" "}
+                      {order.paymentid || "Not Available"}
+                    </p>
+                  </div>
+
+                  <span className="order-status">
+                    ✓ Order Placed
+                  </span>
+
                 </div>
-                <span className={`order-status order-status--${String(order.status || 'placed').toLowerCase()}`}>
-                  {order.status || 'Placed'}
-                </span>
-              </div>
 
-              <div className="order-payment">
-                <div>
-                  <span className="order-label">Payment ID</span>
-                  <strong>{paymentId || 'Not available'}</strong>
-                </div>
-                <div>
-                  <span className="order-label">Order total</span>
-                  <strong>{formatCurrency(total)}</strong>
-                </div>
-              </div>
+                {/* Cars */}
+                <div className="cars-list">
 
-              <div className="order-items">
-                {items.map((item, itemIndex) => {
-                  const car = getCar(item)
-                  const quantity = Number(item?.quantity || 1)
-                  return (
-                    <div className="order-item" key={item?.id || car?.id || `${orderId}-${itemIndex}`}>
-                      {car?.image ? <img src={car.image} alt={`${car.brand || ''} ${car.model || 'Car'}`} /> : <div className="order-item__placeholder">CAR</div>}
-                      <div>
-                        <h3>{car?.brand || 'Car'} {car?.model || ''}</h3>
-                        <p>Color: {car?.color || 'Not specified'} · Quantity: {quantity}</p>
+                  {cars.length === 0 ? (
+
+                    <p>
+                      No car details available.
+                    </p>
+
+                  ) : (
+
+                    cars.map((car) => (
+
+                      <div
+                        className="ordered-car"
+                        key={car.id}
+                      >
+
+                        <img
+                          src={car.image}
+                          alt={`${car.brand} ${car.model}`}
+                        />
+
+                        <div className="car-info">
+
+                          <h3>
+                            {car.brand} {car.model}
+                          </h3>
+
+                          <p>
+                            <b>Color:</b>{" "}
+                            {car.color || "Not specified"}
+                          </p>
+
+                          <p>
+                            <b>Price:</b>{" "}
+                            {formatCurrency(car.price)}
+                          </p>
+
+                        </div>
+
                       </div>
-                      <strong>{formatCurrency(Number(car?.price || item?.price || 0) * quantity)}</strong>
-                    </div>
-                  )
-                })}
+
+                    ))
+
+                  )}
+
+                </div>
+
+                {/* Order Total */}
+                <div className="order-total">
+
+                  <span>
+                    Total Amount
+                  </span>
+
+                  <strong>
+                    {formatCurrency(totalAmount)}
+                  </strong>
+
+                </div>
+
               </div>
-            </article>
-          )
-        })}
-      </section>
+            );
+          })}
+
+        </div>
+      )}
+
     </main>
-  )
+  );
 }
 
-export default Order
+export default Orders;
+

@@ -74,9 +74,9 @@ function ViewCart() {
 
                 if (res.data == "Order placed") {
 
-                    let res = await axios.delete("http://localhost:8080/cart");
+                    let res = await axios.delete("http://localhost:8080/cartd");
 
-                    if (res.data == "cart is empty") {
+                    if (res.data == "Remove all") {
                         navigate("/orders")
                     }
                 }
